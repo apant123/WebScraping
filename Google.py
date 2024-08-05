@@ -1,37 +1,29 @@
 import time
-import psycopg2
 import pandas as pd
-from bs4 import BeautifulSoup
-import re
-import psycopg2
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.select import Select
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
-from docx import Document
 from sqlalchemy import create_engine, text
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 import signal
-import sys
-import logging
 
 shutdown_flag = False
 
-def connect_to_db():
-    engine = create_engine(
-        'postgresql+psycopg2://postgres:Ellipsispostgres42$@localhost/BDCFabric',
-        #echo=True,  # Log SQL statements (for debugging purposes; disable in production)
-        pool_size=10,  # Number of connections to maintain in the pool
-        max_overflow=20,  # Allow up to 30 connections in total (10 + 20)
-        pool_timeout=30,  # Number of seconds to wait before giving up on returning a connection
-        pool_recycle=1800  # Recycle connections after 30 minutes
-    )
-    return engine
+# def d():
+#     engine = create_engine(
+#         'postgresql+psycopg2://postgres:Ellipsispostgres42$@localhost/BDCFabric',
+#         #echo=True,  # Log SQL statements (for debugging purposes; disable in production)
+#         pool_size=10,  # Number of connections to maintain in the pool
+#         max_overflow=20,  # Allow up to 30 connections in total (10 + 20)
+#         pool_timeout=30,  # Number of seconds to wait before giving up on returning a connection
+#         pool_recycle=1800  # Recycle connections after 30 minutes
+#     )
+#     return engine
 
 def signal_handler(signum, frame):
     global shutdown_flag
@@ -43,56 +35,56 @@ signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
 def fetch_addresses():
-    df = pd.read_csv('addresses.csv')
+    df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking.csv')
     return df
 
 
-def update_database_gf(address_primary, zip, eligible_gf, no_service_gf, need_unit_gf, has_account_gf, unknown_gf, business_gf):
-    engine = connect_to_db()
-    # Create a connection object
-    with engine.connect() as conn:
-        # Begin a transaction
-        with conn.begin():
-            # Define the SQL update statement
-            query = text("""
-                UPDATE public.broadband_kcmo_served_gf_ordered
-                SET eligible_gf = :eligible_gf, no_service_gf = :no_service_gf, need_unit_gf = :need_unit_gf, has_account_gf = :has_account_gf, unknown_gf = :unknown_gf, business_gf = :business_gf
-                WHERE address_primary = :address_primary AND zip = :zip;
-            """)
-            # Execute the update statement with parameters
-            conn.execute(query, {
-                'eligible_gf': eligible_gf,
-                'no_service_gf': no_service_gf,
-                'need_unit_gf': need_unit_gf,
-                'has_account_gf': has_account_gf,
-                'unknown_gf': unknown_gf,
-                'business_gf': business_gf,
-                'address_primary': address_primary,
-                'zip': zip
-            })
+# def update_database_gf(address_primary, zip, eligible_gf, no_service_gf, need_unit_gf, has_account_gf, unknown_gf, business_gf):
+#     engine = connect_to_db()
+#     # Create a connection object
+#     with engine.connect() as conn:
+#         # Begin a transaction
+#         with conn.begin():
+#             # Define the SQL update statement
+#             query = text("""
+#                 UPDATE public.broadband_kcmo_served_gf_ordered
+#                 SET eligible_gf = :eligible_gf, no_service_gf = :no_service_gf, need_unit_gf = :need_unit_gf, has_account_gf = :has_account_gf, unknown_gf = :unknown_gf, business_gf = :business_gf
+#                 WHERE address_primary = :address_primary AND zip = :zip;
+#             """)
+#             # Execute the update statement with parameters
+#             conn.execute(query, {
+#                 'eligible_gf': eligible_gf,
+#                 'no_service_gf': no_service_gf,
+#                 'need_unit_gf': need_unit_gf,
+#                 'has_account_gf': has_account_gf,
+#                 'unknown_gf': unknown_gf,
+#                 'business_gf': business_gf,
+#                 'address_primary': address_primary,
+#                 'zip': zip
+#             })
 
-def update_database_xf(address_primary, zip, eligible_xf, no_service_xf, need_unit_xf, has_account_xf, unknown_xf):
-    engine = connect_to_db()
-    # Create a connection object
-    with engine.connect() as conn:
-        # Begin a transaction
-        with conn.begin():
-            # Define the SQL update statement
-            query = text("""
-                UPDATE public.scraper_test
-                SET eligible_xf = :eligible_xf, no_service_xf = :no_service_xf, need_unit_xf = :need_unit_xf, has_account_xf = :has_account_xf, unknown_xf = :unknown_xf
-                WHERE address_primary = :address_primary AND zip = :zip;
-            """)
-            # Execute the update statement with parameters
-            conn.execute(query, {
-                'eligible_xf': eligible_xf,
-                'no_service_xf': no_service_xf,
-                'need_unit_xf': need_unit_xf,
-                'has_account_xf': has_account_xf,
-                'unknown_xf': unknown_xf,
-                'address_primary': address_primary,
-                'zip': zip
-            })
+# def update_database_xf(address_primary, zip, eligible_xf, no_service_xf, need_unit_xf, has_account_xf, unknown_xf):
+#     engine = connect_to_db()
+#     # Create a connection object
+#     with engine.connect() as conn:
+#         # Begin a transaction
+#         with conn.begin():
+#             # Define the SQL update statement
+#             query = text("""
+#                 UPDATE public.scraper_test
+#                 SET eligible_xf = :eligible_xf, no_service_xf = :no_service_xf, need_unit_xf = :need_unit_xf, has_account_xf = :has_account_xf, unknown_xf = :unknown_xf
+#                 WHERE address_primary = :address_primary AND zip = :zip;
+#             """)
+#             # Execute the update statement with parameters
+#             conn.execute(query, {
+#                 'eligible_xf': eligible_xf,
+#                 'no_service_xf': no_service_xf,
+#                 'need_unit_xf': need_unit_xf,
+#                 'has_account_xf': has_account_xf,
+#                 'unknown_xf': unknown_xf,
+#                 'address_primary': address_primary,
+#                 'zip': zip
+#             })
 
 def check_address(row):
     if shutdown_flag:
@@ -103,7 +95,7 @@ def check_address(row):
     driver = None
     
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless') #Makes it run in background. Will show what's happening if commented out. 
     chrome_options.add_argument('--disable-dev-shm-usage')  # prevent Chrome crashes
     chrome_options.add_argument('--no-sandbox')  # bypass OS security model, required by Docker if used
     chrome_options.add_argument('--disable-gpu')  # applicable to windows os only
@@ -112,7 +104,7 @@ def check_address(row):
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])  # suppresses logging
     chrome_options.add_argument('--log-level=3')  # This sets the logging level to only include fatal errors
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])  # This suppresses additional logging
-    service = Service('C:\Program Files\Chrome Driver\chromedriver.exe',log_path=os.devnull)
+    service = Service('/Users/aravpant/Desktop/Projects/WebScraping/chromedriver',log_path=os.devnull)
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     location_id = row['location_id']
@@ -263,19 +255,20 @@ def main():
     global data
     data = fetch_addresses()
 
-    with ThreadPoolExecutor(max_workers=10) as executor:  # Adjust number of workers as needed
-        # Submit tasks to the executor
-        futures = [executor.submit(check_address, i, row) for i, row in data.iterrows()]
+    # with ThreadPoolExecutor(max_workers=10) as executor:  # Adjust number of workers as needed
+    #     # Submit tasks to the executor
+    #     futures = [executor.submit(check_address, i, row) for i, row in data.iterrows()]
 
-        # Collect results (optional, could also handle exceptions or logging here)
-        for future in futures:
-            if shutdown_flag:
-                break
-            try:
-                result = future.result()
-                print(result)
-            except Exception as e:
-                print(f"An error occurred: {str(e)}")
+    #     # Collect results (optional, could also handle exceptions or logging here)
+    #     for future in futures:
+    #         if shutdown_flag:
+    #             break
+    #         try:
+    #             result = future.result()
+    #             print(result)
+    #         except Exception as e:
+    #             print(f"An error occurred: {str(e)}")
+    
     data.to_csv('updated_addresses.csv', index=False)
 
 
