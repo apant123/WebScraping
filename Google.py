@@ -25,43 +25,43 @@ shutdown_flag = False
 #     )
 #     return engine
 
-def signal_handler(signum, frame):
-    global shutdown_flag
-    shutdown_flag = True
-    print("Shutdown signal received. Stopping threads...")
+# def signal_handler(signum, frame):
+#     global shutdown_flag
+#     shutdown_flag = True
+#     print("Shutdown signal received. Stopping threads...")
 
-# Set up signal handling
-signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGTERM, signal_handler)
+# # Set up signal handling
+# signal.signal(signal.SIGINT, signal_handler)
+# signal.signal(signal.SIGTERM, signal_handler)
 
 def fetch_addresses():
     df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking.csv')
     return df
 
 
-# def update_database_gf(address_primary, zip, eligible_gf, no_service_gf, need_unit_gf, has_account_gf, unknown_gf, business_gf):
-#     engine = connect_to_db()
-#     # Create a connection object
-#     with engine.connect() as conn:
-#         # Begin a transaction
-#         with conn.begin():
-#             # Define the SQL update statement
-#             query = text("""
-#                 UPDATE public.broadband_kcmo_served_gf_ordered
-#                 SET eligible_gf = :eligible_gf, no_service_gf = :no_service_gf, need_unit_gf = :need_unit_gf, has_account_gf = :has_account_gf, unknown_gf = :unknown_gf, business_gf = :business_gf
-#                 WHERE address_primary = :address_primary AND zip = :zip;
-#             """)
-#             # Execute the update statement with parameters
-#             conn.execute(query, {
-#                 'eligible_gf': eligible_gf,
-#                 'no_service_gf': no_service_gf,
-#                 'need_unit_gf': need_unit_gf,
-#                 'has_account_gf': has_account_gf,
-#                 'unknown_gf': unknown_gf,
-#                 'business_gf': business_gf,
-#                 'address_primary': address_primary,
-#                 'zip': zip
-#             })
+def update_database_gf(address_primary, zip, eligible_gf, no_service_gf, need_unit_gf, has_account_gf, unknown_gf, business_gf):
+    engine = connect_to_db()
+    # Create a connection object
+    with engine.connect() as conn:
+        # Begin a transaction
+        with conn.begin():
+            # Define the SQL update statement
+            query = text("""
+                UPDATE public.broadband_kcmo_served_gf_ordered
+                SET eligible_gf = :eligible_gf, no_service_gf = :no_service_gf, need_unit_gf = :need_unit_gf, has_account_gf = :has_account_gf, unknown_gf = :unknown_gf, business_gf = :business_gf
+                WHERE address_primary = :address_primary AND zip = :zip;
+            """)
+            # Execute the update statement with parameters
+            conn.execute(query, {
+                'eligible_gf': eligible_gf,
+                'no_service_gf': no_service_gf,
+                'need_unit_gf': need_unit_gf,
+                'has_account_gf': has_account_gf,
+                'unknown_gf': unknown_gf,
+                'business_gf': business_gf,
+                'address_primary': address_primary,
+                'zip': zip
+            })
 
 # def update_database_xf(address_primary, zip, eligible_xf, no_service_xf, need_unit_xf, has_account_xf, unknown_xf):
 #     engine = connect_to_db()
@@ -96,13 +96,13 @@ def check_address(row):
     
     chrome_options = Options()
     #chrome_options.add_argument('--headless') #Makes it run in background. Will show what's happening if commented out. 
-    chrome_options.add_argument('--disable-dev-shm-usage')  # prevent Chrome crashes
-    chrome_options.add_argument('--no-sandbox')  # bypass OS security model, required by Docker if used
-    chrome_options.add_argument('--disable-gpu')  # applicable to windows os only
-    chrome_options.add_argument('--disable-extensions')  # disabling extensions
-    chrome_options.add_argument('--disable-logging')  # should disable additional logging
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])  # suppresses logging
-    chrome_options.add_argument('--log-level=3')  # This sets the logging level to only include fatal errors
+    chrome_options.add_argument('--disable-dev-shm-usage')  # prevents Chrome from using /dev/shm (shared memory), which can cause crashes in environments with limited shared memory.
+    chrome_options.add_argument('--no-sandbox')  # bypass OS security model, required by Docker if used; disables the sandbox security feature in Chrome. It's often required when running Chrome in Docker containers.
+    chrome_options.add_argument('--disable-gpu')  # applicable to windows os only; disables GPU hardware acceleration. It's relevant mainly for running Chrome on Windows.
+    chrome_options.add_argument('--disable-extensions')  # disabling extensions; disables all Chrome extensions, ensuring a clean environment.
+    chrome_options.add_argument('--disable-logging')  # should disable additional logging; attempts to disable additional logging from Chrome.
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])  # suppresses logging; excludes specific switches to suppress automation and logging messages, making the browser less verbose.
+    chrome_options.add_argument('--log-level=3')  # This sets the logging level to only include fatal errors; 
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])  # This suppresses additional logging
     service = Service('/Users/aravpant/Desktop/Projects/WebScraping/chromedriver',log_path=os.devnull)
     driver = webdriver.Chrome(service=service, options=chrome_options)
