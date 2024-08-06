@@ -15,14 +15,12 @@ driver = webdriver.Chrome(service=service)
 
 # Open Google
 driver.get("https://fiber.google.com/db/")
-df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/sample.csv')
-csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv'
+df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking.csv')
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking3.csv'
 
-def check_element(driver, xpath, timeout=1):
+def check_element(driver, xpath):
     try:
-        WebDriverWait(driver, timeout).until(
-            EC.presence_of_all_elements_located((By.XPATH, xpath))
-        )
+        driver.find_element(By.XPATH, xpath)
         return True
     except:
         return False
