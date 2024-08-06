@@ -16,13 +16,13 @@ driver = webdriver.Chrome(service=service)
 # Open Google
 driver.get("https://fiber.google.com/db/")
 df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking.csv')
-
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking3.csv'
 
 for index,row in df.iterrows():
   address = row['address_primary']
   zip = row['zip']
   df.at[index, 'status'] = 'pending'
-  df.to_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv', index=False)
+  df.to_csv(csvpath, index=False)
   elem = WebDriverWait(driver, 2).until(
           EC.presence_of_element_located((By.CSS_SELECTOR, "input.address-checker__input.address-checker__input--street.borderable.pac-target-input"))
   )
@@ -59,11 +59,11 @@ for index,row in df.iterrows():
 
 
   
-  df.to_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv', index=False)
+  df.to_csv(csvpath, index=False)
   
   driver.get("https://fiber.google.com/db/")
 
 
 time.sleep(1)
-df.to_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv', index=False)
+df.to_csv(csvpath, index=False)
 driver.quit()
