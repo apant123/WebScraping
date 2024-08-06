@@ -15,8 +15,17 @@ driver = webdriver.Chrome(service=service)
 
 # Open Google
 driver.get("https://fiber.google.com/db/")
-df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking.csv')
-csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking3.csv'
+df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/sample.csv')
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv'
+
+def check_element(driver, xpath, timeout=1):
+    try:
+        WebDriverWait(driver, timeout).until(
+            EC.presence_of_all_elements_located((By.XPATH, xpath))
+        )
+        return True
+    except:
+        return False
 
 for index,row in df.iterrows():
   address = row['address_primary']
@@ -36,27 +45,18 @@ for index,row in df.iterrows():
   zipcode.send_keys(zip)
   zipcode.send_keys(Keys.RETURN)
 
-  try:
-    elements = WebDriverWait(driver, 1).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//*[@id="mat-mdc-checkbox-2-input"]'))
-    )
+  if check_element(driver, '//*[@id="mat-mdc-checkbox-2-input"]'):
     df.at[index, 'status'] = 'Eligible'
-  except:
-    try:
-      elements1 = WebDriverWait(driver,1).until(
-        EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1' ))
-      )
-      df.at[index,'status'] = 'Unavailable'
-    except:
-      try:
-        element2 = WebDriverWait(driver,1).until(
-          EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1'))
-        )
-        df.at[index,'status'] = 'Has Account'
-      except:
-
-        df.at[index, 'status'] = 'Need Apt'
-
+  elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1'):
+    df.at[index, 'status'] = 'Unavailable'
+  elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1'):
+    df.at[index, 'status'] = 'Has Account'
+  elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/address-search/button/span[2]'):
+    df.at[index, 'status'] = 'Need Apt'
+  elif check_element(driver, '//*[@id="mat-radio-2-input"]'):
+     df.at[index, 'status'] = 'Business'
+  else:
+    df.at[index, 'status'] = 'Something'
 
   
   df.to_csv(csvpath, index=False)
@@ -67,3 +67,40 @@ for index,row in df.iterrows():
 time.sleep(1)
 df.to_csv(csvpath, index=False)
 driver.quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# try:
+  #   elements = WebDriverWait(driver, 1).until(
+  #       EC.presence_of_all_elements_located((By.XPATH, '//*[@id="mat-mdc-checkbox-2-input"]'))
+  #   )
+  #   df.at[index, 'status'] = 'Eligible'
+  # except:
+  #   try:
+  #     elements1 = WebDriverWait(driver,1).until(
+  #       EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1' ))
+  #     )
+  #     df.at[index,'status'] = 'Unavailable'
+  #   except:
+  #     try:
+  #       element2 = WebDriverWait(driver,1).until(
+  #         EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1'))
+  #       )
+  #       df.at[index,'status'] = 'Has Account'
+  #     except:
+
+  #       df.at[index, 'status'] = 'Need Apt'
