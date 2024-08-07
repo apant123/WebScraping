@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 import pandas as pd
 import time
 
@@ -11,14 +12,18 @@ start_time = time.time()
 # Ensure you provide the correct path to your chromedriver executable
 service = Service(executable_path= "/Users/aravpant/Desktop/Projects/WebScraping/First-Project/chromedriver")
 
-# Initialize the WebDriver
-driver = webdriver.Chrome(service=service)
+#Add Chrome Options
+chrome_options = Options()
+#chrome_options.add_argument('--headless')
 
+# Initialize the WebDriver
+driver = webdriver.Chrome(service=service, options=chrome_options)
+driver.maximize_window()
 # Open Google
 pricing = False
 driver.get("https://fiber.google.com/db/")
 df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
-csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/AddressWorking2.csv'
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad2.csv'
 
 def check_element(driver, xpath):
     try:
@@ -43,20 +48,20 @@ for index,row in df.iterrows():
   #df['1_Gig'] = 'default_value'
   #df.at[index, 'status'] = 'pending'
   #df.to_csv(csvpath, index=False)
-  elem = WebDriverWait(driver, 1).until(
+  elem = WebDriverWait(driver, 10).until(
           EC.presence_of_element_located((By.CSS_SELECTOR, "input.address-checker__input.address-checker__input--street.borderable.pac-target-input"))
   )
   elem.clear()
   elem.send_keys(address)
 
-  zipcode = WebDriverWait(driver, 1).until(
+  zipcode = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="hero-carousal"]/div[2]/div/div[1]/form/div/div[1]/div[3]/input'))
   )
   zipcode.clear()
   zipcode.send_keys(zip)
   zipcode.send_keys(Keys.RETURN)
 
-  if check_element(driver, '//*[@id="mat-mdc-checkbox-2-input"]'):
+  if check_element(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div'):
     df.at[index, 'status'] = 'Eligible'
     pricing = True
   elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1'):
@@ -70,21 +75,20 @@ for index,row in df.iterrows():
   else:
     df.at[index, 'status'] = 'Something'
 
-  if pricing:    
-    # started = WebDriverWait(driver, 2).until(
-    # EC.element_to_be_clickable((By.XPATH, '/html/body/modularsignup-app/sequence/div[2]/bottom-bar/div/button/span[2]'))
-    # )
+  if pricing:  
     started = driver.find_element(By.XPATH, '/html/body/modularsignup-app/sequence/div[2]/bottom-bar/div/button/span[2]')
-    #driver.execute_script("arguments[0].scrollIntoView(true);", started)
     started.click()
+    temp = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span'))
+    )
     if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[0]:
       df.at[index, '1_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[1]
     if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
        df.at[index,'2_Gig'] = find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[1]
     if find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
        df.at[index, '5_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[1]
-    if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
-       df.at[index, '8_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[1]          
+    if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1):
+       df.at[index, '8_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[1]
   pricing = False
 
 
@@ -93,7 +97,6 @@ for index,row in df.iterrows():
   driver.get("https://fiber.google.com/db/")
 
 
-time.sleep(1)
 df.to_csv(csvpath, index=False)
 driver.quit()
 
