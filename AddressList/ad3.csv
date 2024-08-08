@@ -1,11 +1,11 @@
-address_primary,city,zip,address_full,Xfinity Test,Spectrum Test,Google Fiber Test,status,1_Gig,2_Gig,5_Gig,8_Gig
-241 N 18th St,Kansas City,66102,"241 N 18th St Kansas City, KS 66102",No Service,Has Account,Service Available,Eligible,$70,$100,$125,$150
-801 S Harrison St,Olathe,66061,"801 S Harrison St Olathe, Apt 111, KS 66061",Service Available (MDU),No Service,Service Available (MDU),Need Apt,,,,
-140 N 134th St,Bonner Springs,66012,"140 N 134th St Bonner Springs, KS 66012",No Service,Service Available,No Service,Unavailable,,,,
-326 S Chestnut St,Olathe,66061,"326 S Chestnut St Olathe, KS 66061",Has Account,No Service,Service Available,Eligible,$70,$100,$125,$150
-6928 Paseo,Kansas City,64132,"6928 Paseo Kansas City, MO 64132",No Service,Service Available,Service Available,Eligible,$70,$100,$125,$150
-2221 S 18th St,Kansas City,66106,"2221 S 18th St Kansas City, KS 66106",No Service,Service Available,Has Account,Has Account,,,,
-251 N 18th St,Kansas City,66102,"251 N 18th St Kansas City, Apt 1, KS 66102",No Service,Service Available (MDU),No Service,Need Apt,,,,
-6305 Ralston Ave,Kansas City,64133,"6305 Ralston Ave Kansas City, MO 64133",Has Account,No Service,Service Available,Eligible,$70,$100,$125,$150
-9919 NE Vrooman Dr,Kansas City,64161,"9919 NE Vrooman Dr Kansas City, MO 64161",No Service,Unknown,No Service,Need Apt,,,,
-608 S Stevenson St,Olathe,66061,"608 S Stevenson St Olathe, KS 66061",Service Available,No Service,Has Account,Has Account,,,,
+address,zip,status,1_Gig,2_Gig,5_Gig,8_Gig
+801 S Harrison St,66061,Need Apt,,,,
+140 N 134th St,66012,Unavailable,,,,
+241 N 18th St,66102,Eligible,$70,$100,$125,$150
+326 S Chestnut St,66061,Eligible,$70,$100,$125,$150
+2221 S 18th St,66106,Has Account,,,,
+6928 Paseo,64132,Eligible,$70,$100,$125,$150
+251 N 18th St,66102,Need Apt,,,,
+6305 Ralston Ave,64133,Eligible,$70,$100,$125,$150
+9919 NE Vrooman Dr,64161,Need Apt,,,,
+608 S Stevenson St,66061,Has Account,,,,

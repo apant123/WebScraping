@@ -5,8 +5,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
 import time
+
+
+
 
 start_time = time.time()
 # Ensure you provide the correct path to your chromedriver executable
@@ -15,15 +19,15 @@ service = Service(executable_path= "/Users/aravpant/Desktop/Projects/WebScraping
 #Add Chrome Options
 chrome_options = Options()
 #chrome_options.add_argument('--headless')
-
+#chrome_options.add_argument('--window-size=1920,1080')
 # Initialize the WebDriver
 driver = webdriver.Chrome(service=service, options=chrome_options)
 driver.maximize_window()
 # Open Google
 pricing = False
 driver.get("https://fiber.google.com/db/")
-df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
-csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad2.csv'
+df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad3.csv'
 
 def check_element(driver, xpath):
     try:
