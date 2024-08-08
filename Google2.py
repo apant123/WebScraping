@@ -26,8 +26,8 @@ driver.maximize_window()
 # Open Google
 pricing = False
 driver.get("https://fiber.google.com/db/")
-df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
-csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad3.csv'
+df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
+csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad4.csv'
 
 def check_element(driver, xpath):
     try:
