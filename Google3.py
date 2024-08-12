@@ -97,26 +97,36 @@ def scrape_address(address, zip):
 
 
 def main():
-    start_time = time.time()
+    total_time = 0
+    num_runs = 10
+    
+    for i in range(num_runs):
+        start_time = time.time()
 
-    df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
-    csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad3.csv'
+        df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
+        csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad3.csv'
 
-    results = []
+        results = []
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(scrape_address, row['address_primary'], row['zip']) for index, row in df.iterrows()]
-        for future in as_completed(futures):
-            results.append(future.result())
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [executor.submit(scrape_address, row['address_primary'], row['zip']) for index, row in df.iterrows()]
+            for future in as_completed(futures):
+                results.append(future.result())
 
-    # Convert results to DataFrame and save to CSV
-    results_df = pd.DataFrame(results)
-    results_df.to_csv(csvpath, index=False)
+            #results = list(executor.map(scrape_address, df['address_primary'], df['zip']))
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Elapsed time: {elapsed_time} seconds")
 
+        # Convert results to DataFrame and save to CSV
+        results_df = pd.DataFrame(results)
+        results_df.to_csv(csvpath, index=False)
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        total_time += elapsed_time
+        print(f"Run {i+1}: {elapsed_time:.2f} seconds")
+
+    average_time = total_time / num_runs
+    print(f"Average time over {num_runs} runs: {average_time:.2f} seconds")
 if __name__ == "__main__":
     #cProfile.run('main()')
     main()
