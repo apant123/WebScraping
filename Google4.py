@@ -95,35 +95,45 @@ def scrape_address(address, zip):
 
 def process_chunk(chunk):
     results = []
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=2) as executor:
         futures = [executor.submit(scrape_address, row['address_primary'], row['zip']) for index, row in chunk.iterrows()]
         for future in as_completed(futures):
             results.append(future.result())
     return results
 
 def main():
-    start_time = time.time()
+    total_time = 0
+    num_runs = 1
+    
+    for i in range(num_runs):
+        start_time = time.time()
 
-    df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
-    csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad2.csv'
+        df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
+        csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad2.csv'
 
-    # Split the DataFrame into chunks for multiprocessing
-    num_chunks = 5  # Number of chunks/processes
-    chunks = [df[i::num_chunks] for i in range(num_chunks)]
+        # Split the DataFrame into chunks for multiprocessing
+        num_chunks = 4  # Number of chunks/processes
+        chunks = [df[i::num_chunks] for i in range(num_chunks)]
 
-    all_results = []
-    with ProcessPoolExecutor(max_workers=num_chunks) as executor:
-        futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
-        for future in as_completed(futures):
-            all_results.extend(future.result())
+        all_results = []
+        with ProcessPoolExecutor(max_workers=num_chunks) as executor:
+            futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
+            for future in as_completed(futures):
+                all_results.extend(future.result())
 
-    # Convert results to DataFrame and save to CSV
-    results_df = pd.DataFrame(all_results)
-    results_df.to_csv(csvpath, index=False)
+        # Convert results to DataFrame and save to CSV
+        results_df = pd.DataFrame(all_results)
+        results_df.to_csv(csvpath, index=False)
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Elapsed time: {elapsed_time} seconds")
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        total_time += elapsed_time
+        print(f"Run {i+1}: {elapsed_time:.2f} seconds")
+
+    average_time = total_time / num_runs
+    print(f"Average time over {num_runs} runs: {average_time:.2f} seconds")
+
+
 
 if __name__ == "__main__":
     main()

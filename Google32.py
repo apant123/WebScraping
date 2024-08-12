@@ -91,8 +91,6 @@ def scrape_address(df, index, address, zip):
         driver.quit()
     
 
-
-
 def main():
     total_time = 0
     num_runs = 1
