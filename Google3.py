@@ -59,6 +59,20 @@ def scrape_address(address, zip):
         zipcode.send_keys(zip)
         zipcode.send_keys(Keys.RETURN)
 
+
+        try:
+            element = WebDriverWait(driver, 10).until(
+                EC.any_of(
+                    EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div')),  # Eligible
+                    EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1')),  # Unavailable
+                    EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1')),  # Has Account
+                    EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/address-search/button/span[2]')),  # Need Apt
+                    EC.presence_of_element_located((By.XPATH, '//*[@id="mat-radio-2-input"]'))  # Business
+                )
+            )
+        except TimeoutException:
+            result['status'] = 'Something'
+        
         if check_element(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div'):
             result['status'] = 'Eligible'
             pricing = True
@@ -98,7 +112,7 @@ def scrape_address(address, zip):
 
 def main():
     total_time = 0
-    num_runs = 1
+    num_runs = 10
     
     for i in range(num_runs):
         start_time = time.time()

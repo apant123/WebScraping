@@ -19,22 +19,26 @@ service = Service(executable_path= "/Users/aravpant/Desktop/Projects/WebScraping
 #Add Chrome Options
 chrome_options = Options()
 #chrome_options.add_argument('--headless')
-#chrome_options.add_argument('--window-size=1920,1080')
+chrome_options.add_argument('--window-size=1920,1080')
 # Initialize the WebDriver
 driver = webdriver.Chrome(service=service, options=chrome_options)
 driver.maximize_window()
 # Open Google
 pricing = False
 driver.get("https://fiber.google.com/db/")
-df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
+df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
 csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad4.csv'
 
 def check_element(driver, xpath):
     try:
         driver.find_element(By.XPATH, xpath)
+        # elem = WebDriverWait(driver, 2).until(
+        # EC.presence_of_element_located((By.XPATH, xpath))
+        # )
         return True
     except:
         return False
+        
 
 def find_price(driver,xpath, timeout):
     try:
@@ -52,18 +56,32 @@ for index,row in df.iterrows():
   #df['1_Gig'] = 'default_value'
   #df.at[index, 'status'] = 'pending'
   #df.to_csv(csvpath, index=False)
-  elem = WebDriverWait(driver, 10).until(
-          EC.presence_of_element_located((By.CSS_SELECTOR, "input.address-checker__input.address-checker__input--street.borderable.pac-target-input"))
+  elem = WebDriverWait(driver, 100).until(
+          EC.presence_of_element_located((By.XPATH, '//*[@id="hero-carousal"]/div[2]/div/div[1]/form/div/div[1]/div[1]/div/input'))
   )
   elem.clear()
   elem.send_keys(address)
 
-  zipcode = WebDriverWait(driver, 10).until(
+  zipcode = WebDriverWait(driver, 100).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="hero-carousal"]/div[2]/div/div[1]/form/div/div[1]/div[3]/input'))
   )
+
   zipcode.clear()
   zipcode.send_keys(zip)
   zipcode.send_keys(Keys.RETURN)
+  #time.sleep(1)
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.any_of(
+            EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div')),  # Eligible
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1')),  # Unavailable
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1')),  # Has Account
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/address-app/div/cta-view/address-search/button/span[2]')),  # Need Apt
+            EC.presence_of_element_located((By.XPATH, '//*[@id="mat-radio-2-input"]'))  # Business
+        )
+    )
+  except TimeoutException:
+     df.at[index, 'status'] = 'Something'
 
   if check_element(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div'):
     df.at[index, 'status'] = 'Eligible'
@@ -82,7 +100,7 @@ for index,row in df.iterrows():
   if pricing:  
     started = driver.find_element(By.XPATH, '/html/body/modularsignup-app/sequence/div[2]/bottom-bar/div/button/span[2]')
     started.click()
-    temp = WebDriverWait(driver, 10).until(
+    temp = WebDriverWait(driver, 100).until(
         EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span'))
     )
     if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[0]:
