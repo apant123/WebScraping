@@ -97,22 +97,32 @@ def scrape_address(df, index, address, zip):
             )
             current_url = driver.current_url
             if current_url == 'https://www.spectrum.com/phx/address/multiple-unit':
+                print("Got Here")
+                time.sleep(2)
                 actions = ActionChains(driver)
                 actions.send_keys(Keys.ENTER).perform()
-                Aptbox = driver.find_element_by_xpath('//*[@id="mat-input-3"]')
+                time.sleep(2)
+                Aptbox = WebDriverWait(driver, 100).until(
+                    EC.presence_of_element_located((By.XPATH, '//*[@id="mat-input-3"]'))
+                    )
+                #Aptbox = driver.find_element_by_xpath('//*[@id="mat-input-3"]')
+                #print("Found Element")
                 value = Aptbox.get_attribute('value')
-                print(value)
+                df.at[index, 'AptNum'] = value
+                #print(value)
+                #print("Got here")
                 Boxclick = WebDriverWait(driver, 100).until(
-                    EC.element_to_be_clickable((By.XPATH, '/html/body/app-root/div[2]/div[2]/app-address/app-bf-page-container/div/div/app-bf-template-engine/div/app-bf-address/div/div/div/span/div/div[3]/div/div/button'))
+                    EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/div[2]/app-address/app-bf-page-container/div/div/app-bf-template-engine/div/app-bf-address/div/div/div/span/div/div[3]/div/div/button'))
                 )
                 Boxclick.click()
-                element = WebDriverWait(driver, 100).until(
+
+                #time.sleep(7)
+                element2 = WebDriverWait(driver, 100).until(
                     EC.any_of(
                         EC.url_contains("https://www.spectrum.com/phx/address/house-not-found"),
                         EC.url_contains("/phx/buy/products"),
                         EC.url_contains("https://www.spectrum.com/phx/address/out-of-footprint"),
                         EC.url_contains("https://www.spectrum.com/phx/address/existing-coverage"),
-                        EC.url_contains("https://www.spectrum.com/phx/address/multiple-unit")
                     )
                 )
         except TimeoutException:
@@ -187,7 +197,7 @@ def main():
         df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
         csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad5.csv'
 
-        with ThreadPoolExecutor(max_workers=1) as executor:
+        with ThreadPoolExecutor(max_workers=4) as executor:
             futures = [executor.submit(scrape_address, df, index, row['address_primary'], row['zip']) for index, row in df.iterrows()]
             for future in as_completed(futures):
                 future.result()  # Ensure all threads complete
