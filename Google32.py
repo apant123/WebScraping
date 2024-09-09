@@ -30,9 +30,9 @@ def find_price(driver,xpath, timeout):
 
 
 def scrape_address(df, index, address, zip):
-    service = Service(executable_path="/Users/aravpant/Desktop/Projects/WebScraping/First-Project/chromedriver")
+    service = Service(executable_path="/Users/aravpant/Desktop/Projects/WebScraping/chromedriver")
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless')
     chrome_options.add_argument('--window-size=1920,1080')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
@@ -68,25 +68,20 @@ def scrape_address(df, index, address, zip):
                 )
             )
         except TimeoutException:
-            result['status'] = 'Something'
-
-
-
-
-
+            df.at[index, 'Google-Status'] = 'Something'
 
 
         if check_element(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div/div/base-step/section/preconfig-step/div/preconfig-card/div'):
-            df.at[index, 'status'] = 'Eligible'
+            df.at[index, 'Google-Status'] = 'Eligible'
             pricing = True
         elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-mailing/div/div/div[1]/div/h1'):
-            df.at[index, 'status'] = 'Unavailable'
+            df.at[index, 'Google-Status'] = 'Unavailable'
         elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/cta-container/cta-already-registered/div/h1'):
-            df.at[index, 'status'] = 'Has Account'
+            df.at[index, 'Google-Status'] = 'Has Account'
         elif check_element(driver, '/html/body/div[1]/address-app/div/cta-view/address-search/button/span[2]'):
-            df.at[index, 'status'] = 'Need Apt'
+            df.at[index, 'Google-Status'] = 'Need Apt'
         elif check_element(driver, '//*[@id="mat-radio-2-input"]'):
-            df.at[index, 'status'] = 'Business'
+            df.at[index, 'Google-Status'] = 'Business'
         else:
             df.at[index, 'status'] = 'Something'
 
@@ -97,13 +92,13 @@ def scrape_address(df, index, address, zip):
               EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span'))
             )
             if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[0]:
-                df.at[index, '1_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[1]
+                df.at[index, 'Google-1_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[1]
             if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
-                df.at[index,'2_Gig'] = find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[1]
+                df.at[index,'Google-2_Gig'] = find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[1]
             if find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
-                df.at[index, '5_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[1]
+                df.at[index, 'Google-5_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[1]
             if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
-                df.at[index, '8_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[1]
+                df.at[index, 'Google-8_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[4]/div/div[3]/div[1]/div/span[2]/span',1)[1]
     except Exception as e:
         print(f"Error processing address {address}: {e}")
     finally:
@@ -112,7 +107,7 @@ def scrape_address(df, index, address, zip):
 
 def main():
     total_time = 0
-    num_runs = 10
+    num_runs = 1
     
     for i in range(num_runs):
         start_time = time.time()
