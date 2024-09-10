@@ -1,11 +1,11 @@
-address_primary,city,zip,address_full,Xfinity Test,Spectrum Test,Google Fiber Test,Spectrum-Status,Google-Status,Google-8_Gig,Google-5_Gig,Google-2_Gig,Google-1_Gig,AptNum
-241 N 18th St,Kansas City,66102,"241 N 18th St Kansas City, KS 66102",No Service,Has Account,Service Available,Has Account,-,-,-,-,-,
-801 S Harrison St,Olathe,66061,"801 S Harrison St Olathe, Apt 111, KS 66061",Service Available (MDU),No Service,Service Available (MDU),Unavailable,-,-,-,-,-,
-140 N 134th St,Bonner Springs,66012,"140 N 134th St Bonner Springs, KS 66012",No Service,Service Available,No Service,Eligible,-,-,-,-,-,
-326 S Chestnut St,Olathe,66061,"326 S Chestnut St Olathe, KS 66061",Has Account,No Service,Service Available,Unavailable,-,-,-,-,-,
-6928 Paseo,Kansas City,64132,"6928 Paseo Kansas City, MO 64132",No Service,Service Available,Service Available,Eligible,-,-,-,-,-,
-2221 S 18th St,Kansas City,66106,"2221 S 18th St Kansas City, KS 66106",No Service,Service Available,Has Account,Eligible,-,-,-,-,-,
-251 N 18th St,Kansas City,66102,"251 N 18th St Kansas City, Apt 1, KS 66102",No Service,Service Available (MDU),No Service,Eligible,-,-,-,-,-,APT 1
-6305 Ralston Ave,Kansas City,64133,"6305 Ralston Ave Kansas City, MO 64133",Has Account,No Service,Service Available,Unavailable,-,-,-,-,-,
-9919 NE Vrooman Dr,Kansas City,64161,"9919 NE Vrooman Dr Kansas City, MO 64161",No Service,Unknown,No Service,Call In,-,-,-,-,-,
-608 S Stevenson St,Olathe,66061,"608 S Stevenson St Olathe, KS 66061",Service Available,No Service,Has Account,Unavailable,-,-,-,-,-,
+address_primary,city,zip,address_full,Xfinity Test,Spectrum Test,Google Fiber Test,Spectrum-Status,Google-Status,Google-8_Gig,Google-5_Gig,Google-2_Gig,Google-1_Gig,Spectrum-100 Mbps,Spectrum-50 Mbps,Spectrum-400 Mbps,Spectrum-600 Mbps,Spectrum-1 GB,AptNum
+241 N 18th St,Kansas City,66102,"241 N 18th St Kansas City, KS 66102",No Service,Has Account,Service Available,Has Account,-,-,-,-,-,,,,,,
+801 S Harrison St,Olathe,66061,"801 S Harrison St Olathe, Apt 111, KS 66061",Service Available (MDU),No Service,Service Available (MDU),Unavailable,-,-,-,-,-,,,,,,
+140 N 134th St,Bonner Springs,66012,"140 N 134th St Bonner Springs, KS 66012",No Service,Service Available,No Service,Eligible,-,-,-,-,-,$50.00,,$87.99,$107.99,$117.99,
+326 S Chestnut St,Olathe,66061,"326 S Chestnut St Olathe, KS 66061",Has Account,No Service,Service Available,Unavailable,-,-,-,-,-,,,,,,
+6928 Paseo,Kansas City,64132,"6928 Paseo Kansas City, MO 64132",No Service,Service Available,Service Available,Eligible,-,-,-,-,-,$50.00,$24.99,$87.99,$107.99,$117.99,
+2221 S 18th St,Kansas City,66106,"2221 S 18th St Kansas City, KS 66106",No Service,Service Available,Has Account,Eligible,-,-,-,-,-,$50.00,,$87.99,$107.99,$117.99,
+251 N 18th St,Kansas City,66102,"251 N 18th St Kansas City, Apt 1, KS 66102",No Service,Service Available (MDU),No Service,Eligible,-,-,-,-,-,$50.00,$24.99,$87.99,$107.99,$117.99,APT 1
+6305 Ralston Ave,Kansas City,64133,"6305 Ralston Ave Kansas City, MO 64133",Has Account,No Service,Service Available,Unavailable,-,-,-,-,-,,,,,,
+9919 NE Vrooman Dr,Kansas City,64161,"9919 NE Vrooman Dr Kansas City, MO 64161",No Service,Unknown,No Service,Call In,-,-,-,-,-,,,,,,
+608 S Stevenson St,Olathe,66061,"608 S Stevenson St Olathe, KS 66061",Service Available,No Service,Has Account,Unavailable,-,-,-,-,-,,,,,,

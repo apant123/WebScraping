@@ -27,16 +27,11 @@ def find_price(driver,xpath, timeout):
       element = WebDriverWait(driver, timeout).until(
           EC.presence_of_element_located((By.XPATH, xpath))
       )
+      print("Found Element with Function")
       return [True,element.text]
     except:
        return [False, "Null"]
     
-def wait_for_page_load(driver, timeout=100):
-    WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((By.TAG_NAME, 'body'))
-    )
-
-
 
 def scrape_address(df, index, address, zip):
     service = Service(executable_path="/Users/aravpant/Desktop/Projects/WebScraping/chromedriver")
@@ -145,7 +140,7 @@ def scrape_address(df, index, address, zip):
 
         if "/phx/buy/products" in current_url:
             df.at[index, 'Spectrum-Status'] = 'Eligible'
-            #pricing = True
+            pricing = True
             print("Eligible")
             
         elif current_url == 'https://www.spectrum.com/phx/address/out-of-footprint':
@@ -165,13 +160,26 @@ def scrape_address(df, index, address, zip):
             df.at[index, 'Spectrum-Status'] = 'Something'
 
         if pricing:
-            started = driver.find_element(By.XPATH, '/html/body/modularsignup-app/sequence/div[2]/bottom-bar/div/button/span[2]')
-            started.click()
-            temp = WebDriverWait(driver, 100).until(
-              EC.presence_of_element_located((By.XPATH, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span'))
+            started = WebDriverWait(driver, 100).until(
+              EC.presence_of_element_located((By.XPATH, '//*[@id="mat-mdc-checkbox-1-input"]'))
             )
-            if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[0]:
-                df.at[index, '1_Gig'] = find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[1]/div/div[3]/div[1]/div/span[2]/span', 1)[1]
+            started.click()
+            print("Clicked element")
+            time.sleep(1)
+            temp = WebDriverWait(driver, 100).until(
+              EC.presence_of_element_located((By.XPATH, '/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div'))
+            )
+            print("Found boardband label")
+            time.sleep(5)
+            off_screen_element = driver.find_element(By.XPATH, '/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[2]/h3')
+            actions = ActionChains(driver)
+            actions.move_to_element(off_screen_element).perform()
+            
+            if find_price(driver, '#/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[2]/h3', 10)[0]:
+                                   #/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[2]/h3
+                print("Found Element 1")
+                df.at[index, '1_Gig'] = find_price(driver, '/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[3]/div[1]/span', 1)[1]
+                print("Wrote Element 1")
             if find_price(driver, '/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
                 df.at[index,'2_Gig'] = find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[2]/div/div[3]/div[1]/div/span[2]/span',1)[1]
             if find_price(driver,'/html/body/modularsignup-app/sequence/div[1]/main/div[2]/div/internet-step/section/div[3]/div[2]/broadband-label-list/div/div/broadband-label[3]/div/div[3]/div[1]/div/span[2]/span',1)[0]:
@@ -183,10 +191,15 @@ def scrape_address(df, index, address, zip):
     finally:
         driver.quit()
     
+#/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[2]/h3
+#/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[2]/h3
 
 
 
 
+
+#/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[3]/div[1]/span
+#/html/body/app-root/div[2]/div[2]/app-internet/app-bf-page-container/div/div/app-bf-template-engine[2]/div/app-bf-internet-plans/div/div/div[1]/app-bf-accordion-container/div/div[2]/div[3]/app-bf-los-card/div/app-los-card[1]/app-bf-broadband-label/html/div/div[2]/div/div/div/div[3]/div[1]/span
 def main():
     total_time = 0
     num_runs = 1
@@ -197,7 +210,7 @@ def main():
         df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/small.csv')
         csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad5.csv'
 
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=1) as executor:
             futures = [executor.submit(scrape_address, df, index, row['address_primary'], row['zip']) for index, row in df.iterrows()]
             for future in as_completed(futures):
                 future.result()  # Ensure all threads complete
