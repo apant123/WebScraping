@@ -41,7 +41,7 @@ def find_price(driver,xpath, timeout):
 def scrape_address(df, index, address, zip):
     service = Service(executable_path="/Users/aravpant/Desktop/Projects/WebScraping/chromedriver")
     chrome_options = Options()
-    #chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--window-size=1920,1080')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
@@ -241,7 +241,7 @@ def main():
         df = pd.read_csv('/Users/aravpant/Desktop/Projects/WebScraping/AddressList/Sample.csv')
         csvpath = '/Users/aravpant/Desktop/Projects/WebScraping/AddressList/ad5.csv'
 
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        with ThreadPoolExecutor(max_workers=1) as executor:
             futures = [executor.submit(scrape_address, df, index, row['address_primary'], row['zip']) for index, row in df.iterrows()]
             for future in as_completed(futures):
                 future.result()  # Ensure all threads complete
